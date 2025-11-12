@@ -929,3 +929,60 @@ cst.registerOutParameter(1,Types.FLOAT);
 cst.execute();
 System.out.println("Average Salary ="+cst.getFloat(1));
 ====================================================================================================================
+
+Need of Batch Updates:->
+-> When we submit multiple SQL Queries to the database one by one then lot of time will be
+wasted in request and response.
+
+In the case of Simple Statement:->
+java application <-> Request Time,Response Time <-> compile time,execution time
+Total time per Query = Request time + compile time + execution time + response time
+1ms + 1ms + 1 ms + 1 ms = 4 ms
+per 1000 queries = 4 * 10000ms = 4000ms
+
+In the case of preparedStatement :->
+java application <-> Request time,Response time <-> database <-> execution time
+Total time per query = Request time + response Time + execution time
+1 ms + 1 ms + 1ms = 3 ms
+1000 queries = 3000 ms
+
+In the above 2 cases we are trying to submit 1000 queries to the database one by one. for
+submitting 1000 queries we need to communicate with the database 1000 times. it increases
+network traffic between java application and database and even creates performance problems
+also.
+-> to overcome these problems, we should go for Batch updates. we can group all related SQL
+queries into a single batch and we can send that batch at a time to database
+Java application <-> Batch of queries <-> database
+
+With Simple Statement Batch Updates:->
+Per 1000 queries = Req time + 1000 * compile time + 1000 * execution time + response time
+1ms + 1000 * 1ms + 1000 * 1ms + 1ms
+= 2002 ms
+
+With PreparedStatement BatchUpdates:->
+Per 1000 queries = req time + 1000 * execution time + response time
+1ms + 1000 * 1ms + 1ms
+= 1002 ms
+
+-> Hence the main advantage of batch updaets are
+-> we can reduce network traffic
+-> we can improve performance
+
+we can implement batch updates by using the following two methods:
+
+1. public void addBatch(String sqlQuery)
+to add query to batch
+
+2. int[] executeBatch()
+to execute a batch of sql queries
+
+Note:-> Batch updates applicable only for non select queries.
+
+Advantages:->
+-> Performance will be improved
+-> Network traffic will be low
+
+Dis-advantage:->
+-> it is applicable only for non select query
+-> within the batch if any one query execution failed then all other query execution will also failed.
+===================================================================================================================

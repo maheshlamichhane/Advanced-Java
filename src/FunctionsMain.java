@@ -14,5 +14,26 @@ public class FunctionsMain {
         cst.execute();
         java.math.BigDecimal sum = cst.getBigDecimal(1);
         System.out.println("Sum of id = " + sum.doubleValue());
+
+
+        /*
+        CREATE OR REPLACE FUNCTION public.get_sum_of_id(
+         id11 INT,
+         id22 INT
+         )
+        RETURNS NUMERIC
+        LANGUAGE plpgsql
+        AS $$
+        DECLARE
+        id1 INT;
+        id2 INT;
+        BEGIN
+            SELECT id INTO id1 FROM anonymous WHERE id = id11;
+            SELECT id INTO id2 FROM anonymous WHERE id = id22;
+
+            RETURN (id1 + id2) / 2.0;
+        END;
+        $$;
+         */
     }
 }
