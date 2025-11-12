@@ -18,7 +18,7 @@ All Topics:->
 16. Program for create & Drop table
 17. How to read dynamic input from the keyboard
 18. How to form sql queries with dynamic input
-19. Program for Basic CRUD operaions
+19. Program for Basic CRUD operations
 20. Real time coding standards for jdbc application
 21. How to develop & run JDBC Application with IDEs like eclipse
 22. Working with mySql database
@@ -770,10 +770,162 @@ query but required to execute multiple times.
 -> inserting date and large object(clob and blob) is difficult VS inserting date and large objects(clob and blob)
 is easy.
 
-
-
 SQL Injection Attack:-> when we append special character as dynamic input values while executing sql queries at the run
 time the behaviour of the query will be changed. this is because of the simple statement is compiled every time while
 executing the query then query will be accordingly interpret according to that. this case is not happen with prepare statement
 because prepared statement compiled only once at compile time so there is no change in query behaviour.
 =====================================================================================================================
+
+Stored Procedures:->
+-> In our programming if any code repeatedly required,then we can define that code inside a method
+and we can call that method multiple times based on our requirement.
+-> hence method is the best reusable component in our programming.
+-> similarly in database programming,if any group of sql statements is repeatedly required then we can
+define those sql statements in a single group and we can call that group repeatedly based on our
+requirements.
+-> This group of sql statements that perform a particular task is nothing but stored procedure. hence
+stored procedure is the best reusable component at database level.
+-> hence stored procedure is a group of sql statements that performs a particular task.
+-> these procedures stored in database permanently for future purpose and hence the name stored
+procedure.
+-> Usually stored procedures are created by database admin.
+-> every database has its own language to create stored procedure.
+-> oracle has PL/SQL,mysql has stored procedure language,microsoft sql server has Transact SQL(TSQL
+-> similar to methods stored procedure has its own parameters. stored procedure has 3 types of
+parameters
+
+1. IN parameters(to provide input values)
+2. OUT parameters(to collect output values)
+3. INOUT parameters(to provide input and to collect output)
+
+Eg1:
+Z:=X+Y;
+X,Y are IN parameters and Z is OUT parameter
+
+eg2:
+X:=X+X;
+X is INOUT parameter
+
+How to create and execute Stored Procedure in oracle:->
+create or replace procedure procedure1(X IN number,Y IN number,Z OUT number) as
+BEGIN
+z:=x+y;
+END;
+
+Note:-> SQL and PL/SQL are not case sensitive languages. we can use lower case and uppercase also.
+After writing stored procedures we have to compile for this we required to use "/" for compilation
+
+while compiling if any error occurs then we can check this error by using the following command.
+show errors;
+once we created stored procedures and compiled successfully we have to register out parameter to hold
+result of stored procedures.
+SQL:-> variable sum number;
+we can execute as execute command as follows
+execute procedure1(10,20,:sum);
+print sum
+
+
+Example:-> Creating stored procedure which takes id and return email of that id.
+create or replace procedure procedure3(id_in IN number, email_out OUT varchar2) as
+BEGIN
+ select email into email_out from anonymous where id = id_in;
+END;
+/
+
+variable email varchar2;
+execute procedure3(3,:email);
+print email;
+
+Java Code for calling stored procedures:->
+-> if we want to call a stored procedures from java application then we should go for CallableStatement.
+callable statement is an interface presents in java.sql package and it is the child interface of
+prepared statement.
+statement -> prepared statement -> callable statement
+
+-> driver software vendor is responsible to provide implementation for CallableStatement interface.
+-> we can create callable interface object by using following method of connection interface.
+public CallableStatement prepareCall(String procedure_call) throws SQLException
+-> eg: CallableStatement cst = con.prepareCall("{call addProc(?,?,?)}")
+where call -> jdbc keyword
+addProc -> procedure name
+? -> parameters
+-> whenever JVM encounters this line, JVM will send call to database. database engine will check
+whether the specified procedures is already available or not. if it is available then it returns
+CallableStatement object representing that procedure.
+
+Stored Procedure In PostgreSQL:
+CREATE OR REPLACE PROCEDURE insert_countries(IN country_list TEXT[])
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    c TEXT;
+BEGIN
+    FOREACH c IN ARRAY country_list
+    LOOP
+        INSERT INTO countries(country_name) VALUES (c);
+    END LOOP;
+END;
+$$;
+
+Calling This:
+String sql = "{ CALL insert_countries(?) }";
+
+
+
+Cursors:->
+-> The results of SQL Queries will be stored in special memory area inside database software. this
+memory area is called Context Area.
+-> To access Results of this context area,Some pointers are required and these pointers are nothing
+but cursors.
+-> Hence the main objective of cursor is to access results of SQL Queries.
+-> There are 2 types of cursors
+i. Implicit Cursors
+ii. Explicit Cursors
+
+Implicit Cursors:-> These cursors will be created automatically by database software to hold results
+whenever particular type of sql query got executed.
+
+Explicit  Cursors:-> These cursors will be created explicitly by the developer to hold result of
+particular sql queries.
+
+Eg1:-> SYS_REFCURSOR can be used to access result of select query i.e to access ResultSet.
+Eg2:-> %ROWCOUNT is an implicit cursor provided by oracle to represent the number of rows
+effected because of insert,delete and update queries.
+Eg3:-> %FOUND is an implicit cursor provided by Oracle to represent whether any rows effected or
+not because of insert,delete and update operations(non-select query)
+
+SYS REFCURSOR VS OracleTypes.CURSOR:->
+-> To register SYS_REFCURSOR type OUT paramter JDBC does not contain any type. to handle this situation
+oracle people provided.OracleTypes.CURSOR
+-> OracleTypes is a java class present in oracle.jdbc.package and it is available as the part of
+ojdbc6.jar
+-> if OUT parameter is SYS_REFCURSOR type,then we can get ResultSet by using getObject() method but
+return type of getObject() method is Object and hence we should perform typecasting.
+ResultSet rs = (ResultSet) cst.getObject(1);
+
+
+Functions:-> Functions are exactly same as procedures except that function has return statement
+directly.Procedure can also returns values indirectly in the form of OUT parameters.
+Usually we can use procedure to define business logic and we can use functions to perform some
+calculations like getAverage(),getMax() etc.
+
+Syntax for functions:->
+create or replace function getAvg(id1 IN number,id2 IN number) return number
+as
+sal1 number;
+sal2 number;
+BEGIN
+select esal into sal1 from employees where eno = id1;
+select esal into sal2 from employees where eno = idw;
+return (sal1+sal2)/;
+END
+/
+
+Java Code:->
+CallableStatement st = con.prepareCall("{? = call getAvg(?,?)}");
+cst.setInt(2,100);
+cst.setInt(3,1);
+cst.registerOutParameter(1,Types.FLOAT);
+cst.execute();
+System.out.println("Average Salary ="+cst.getFloat(1));
+====================================================================================================================
