@@ -964,7 +964,7 @@ Per 1000 queries = req time + 1000 * execution time + response time
 1ms + 1000 * 1ms + 1ms
 = 1002 ms
 
--> Hence the main advantage of batch updaets are
+-> Hence the main advantage of batch updates are
 -> we can reduce network traffic
 -> we can improve performance
 
