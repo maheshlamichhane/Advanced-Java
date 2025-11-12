@@ -1,11 +1,10 @@
-import java.math.BigInteger;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
 
 public class CRUDMain {
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws  SQLException {
         Connection con = DBUtil.getConnection();
 
         // Create Table
