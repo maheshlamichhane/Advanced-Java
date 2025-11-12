@@ -1,0 +1,779 @@
+All Topics:->
+
+1. Introduction to Advance Java
+2. JDBC In Simple Way
+3. Storage Areas
+4. Introduction to JDBC
+5. JDBC Architecture
+6. JDBC API
+7. Driver Interface VS Driver Class VS Driver Software
+8. Types of Drivers
+9. Standard Steps to develop JDBC Application
+10. Working with Type-1 Driver
+11. Working with Type-2 Driver
+12. Working with Type-3 Driver
+13. Working with Type-4 Driver
+14. Working with Type-5 Driver
+15. Summary of all 5 JDBC Drivers
+16. Program for create & Drop table
+17. How to read dynamic input from the keyboard
+18. How to form sql queries with dynamic input
+19. Program for Basic CRUD operaions
+20. Real time coding standards for jdbc application
+21. How to develop & run JDBC Application with IDEs like eclipse
+22. Working with mySql database
+23. Life cycle of SQL query Execution
+24. PreparedStatement
+25. Differences Between Statement & PreparedStatement
+26. SQL Injection Attack
+27. Stored Procedures
+28. Callable Statement
+29. Cursors
+30. Functions
+31. Statement VS PreparedStatement VS CallableStatemet
+32. Batch Updates
+33. executeQuery vs executeUpdate() vs execute() vs executeBatch
+34. Insert & Retrieve Date values
+35. BLOB & CLOB Introduction
+36. Insert & Retrieve BLOB Type
+37. Insert & Retrieve CLOB Type
+38. ConnectionPooling
+39. Working with properties
+40. Different ways to get Connection object
+41. Transaction Management
+42. Savepoint
+43. Transaction Concurrency Problems & Isolation Levels
+44. Metadata
+	-> DatabaseMetaData
+	-> ResultSetMetaData
+	-> ParameterMetaData
+45. JDBC with Non-Traditional Databases like excel
+46. ResultSet Types
+    -> Forward Only & Scrollable
+    -> Scroll Sensitive & Scroll Insentive
+    -> Read only & Updatable
+47. ResultSet Holdability
+48. RowSets VS ResultSets
+49. Working with all RowSets
+50. Miscellaneous Topics
+
+Introduction to Advance Java:-> with core java we can develop two type of application.
+
+Amirpet Concept which is wrong:->
+i. Standalone Application
+   -> GUI Based Application(Desktop Application) Eg calc,notepad,video games and paint etc.
+   -> CUI Based Application(Console Application) Eg cmd java demo
+ii. Web Application(JDBC,Servlet,JSP can be used to develop web application)
+
+
+According to sun microsystem there are 3 edition:->
+i. Java Standard Edition(J2SE or JSE) -> Core Java + JDBC -> Standalone application
+ii. Java Enterprise Edition(J2EE or JEE) -> Servlet + JSP -> web and enterprise application
+iii. Java Micro Edition(J2ME or JME) 					  -> mobile and embedded application
+
+
+Basic Components Of JDBC Application:->
+i. Driver -> Translator
+ii. Connection -> Road
+iii. Statement -> Vehicle
+iv.  ResultSet -> Box
+
+
+Steps to develop JDBC Application:->
+i. Load and Register Driver
+ii. Establish Connection between java application and database
+iii. Creation of statement object
+iv. Send and execute SQL Query
+v. Process Result from ResultSet
+vi. Close connection
+
+==================================================================================================
+Storage Areas:->
+	-> Temporary Storage Areas -> all jvm memory areas such as objects stored in heap,local variable in stack,static variable in method area.
+	-> Permanent Storage Areas -> for example file system and database are permanent storage areas(persistent storage areas)
+
+File Systems:->
+-> File Systems provided by Local Operating System.
+-> Files are best suitable to store very less amount of information.
+
+Limitations:->
+-> we can't store huge amount of information
+-> There is no query language support and hence operations will become very
+difficult.
+-> There is no security for our data.
+-> There is no mechanism to prevent duplicate data hence there may be a chance
+of Data inconsistency problems.
+
+Databases:->
+-> we can store huge amount of information
+-> Query language support is available and hence we can perform operations
+very easily.
+->To access data present in the database,compulsory username and password must be
+required hence security there for our data.
+-> While developing database Schemas, Database Admin will follow normalization
+techniques & various constraints like unique key constraints,primary key
+constraints which prevents duplicate data hence there is no chance of data
+inconsistency problems.
+
+
+Limitations:->
+-> we can't store very huge amount of data like peta bytes exa bytes.
+-> can store only structured Data[relational data] & we can't store semi
+structured[like xml files] and unstructured data like videos,audio files etc.
+
+
+JDBC:->
+-> JDBC is a technology which can be used to communicate with database from
+java application.
+java application <-> JDBC <-> DB(Oracle,MySql etc)
+-> JDBC is part of Java Standard Edition(J2SE/JSE)
+-> JDBC is a specification(Guidelines) defined by Java vender and implemented
+by Database vendor.
+-> Database vendor provided implementation is called Driver Software.
+
+JDBC Features:->
+-> JDBC is a standard API. we can communicate with any database without
+rewriting our application.i.e it is database independent api.
+-> Most of JDBC Drivers are develop in java and hence JDBC concept can work
+for any platform i.e it is platform independent technology.
+-> By using JDBC API, we can perform basic CRUD operation very easily. we can
+also perform complex operations(like joins,calling stored procedures) very
+easily.
+-> Huge vendor support for JDBC. They developed multiple products based on JDBC API.
+
+JDBC Versions:->
+-> Java 1.1v(Java SE 1.1v) => JDBC 1.0v
+-> Java 1.4v(Java SE 1.4v) => JDBC 3.0v
+-> Java 5(Java SE 5) => No Update In JDBC
+-> Java 6(Java SE 6) => JDBC 4.0v
+-> Java 7(Java SE 7) => JDBC 4.1v
+-> Java 8(Java SE 8) => JDBC 4.2v
+
+Evolution of JDBC:->
+-> If we want to communicate with database from c/c++ application,
+compulsory we have to use database specific libraries in our application
+directly.
+c/c++ application(use oracle libraries) <-> Oracle DB
+In the above diagram c/c++ application uses oracle libraries directly.
+-> The problem in this approach is, if we want to migrate to other database we have to rewrite total
+application again with new database specific libraries.
+c/c++ application(use mysql libraries) <-> mySql DB
+-> Application will become database dependent and creates maintenance problem
+
+C/C++ application without ODBC:->
+c/c++ application(use oracle libraries) <-> Oracle DB
+c/c++ application(use mysql libraries) <-> MySql DB
+c/c++ application(use sybase libraries) <-> Sybase DB
+-> separate application for every database.
+-> 3 applications for 3 database
+
+C/C++ application with ODBC:->
+-> with ODBC, application can communicate with any database, just by selecting
+corresponding ODBC Driver.
+c/c++ application <-> ODBC Driver For Oracle <-> Oracle DB
+c/c++ application <-> ODBC Driver For MySql <-> MySql DB
+c/c++ application <-> ODBC Driver For Sybase <-> Sybase DB
+-> one application but 3 databases
+-> we are not required to use any database specific libraries in our application.
+and application is database independent.
+
+
+Limitation Of ODBC:->
+Java Application <-> ODBC Driver For Oracle <-> Oracle DB
+Java Application <-> ODBC Driver For MySql <-> MySql DB
+Java Application <-> ODBC Driver For Sybase <-> Sybase DB
+-> ODBC Concept will work only for windows platform.it is platform dependent
+technology.
+-> ODBC Drivers are implemented in C language. if we use for java applications,
+performance will be down because of internal conversions from java to c and
+c to java.
+
+
+JDBC:->
+-> Introduced by SUN microsystem in 1997.
+-> Java Application <-> JDBC Driver for Oracle <-> Oracle DB
+-> Java Application <-> JDBC Driver for MySql <-> MySql DB
+-> Java Application <-> JDBC Driver for Sybase <-> Sybase DB
+-> JDBC Concept applicable for any platform hence it is platform independent
+technology.
+-> mostly JDBC Drivers are implemented in java hence internal conversions are
+not required & performance won't be effected.
+
+
+Differences between ODBC & JDBC:->
+-> ODBC stands for Open Database Connectivity VS JDBC Stands for Java Database Connectivity.
+-> Introduced by microsoft in 1992 VS Introduced by Sun Micro Systems in 1997.
+-> we can use ODBC for any language like c,c++,java,etc. VS we can use JDBC only for java language.
+-> we can use ODBC only for windows platform VS we can use JDBC for any platform.
+-> mostly ODBC drivers are developed in native languages like c/c++ VS mostly JDBC drivers are
+developed in java.
+-> For java applications,it is not recommended to use ODBC because performance will be down due
+to internal conversions and applications will become platform dependent VS For Java applications,
+it is highly recommended to use JDBC because there are no performance & platform dependent
+problem.
+
+JDBC Architecture:->
+Java Application -> JDBC API -> Driver Manager -> Driver For Oracle -> Oracle DB
+-> JDBC API provides DriverManager to java application.
+-> Java application can communicate with any database with the help of DriverManager and database
+specific driver software.
+
+DriverManager:
+-> it is the key component in JDBC Architecture.
+-> it is a class present in java.sql package.
+-> it is responsible to manage all database drivers.
+-> it is responsible to register and unregister database drivers
+DriverManager.registerDriver(driver),
+DriverManager.unregisterDriver(driver)
+-> it is responsible to establish connection to the database with the help of driver software.
+Connection con = DriverManager.getConnection(jdbcUrl,username,pwd);
+
+Database Driver:->
+-> it is very important component of JDBC Architecture.
+-> without driver software, we can't touch database.
+-> it acts as bridge between java application and database.
+-> it is responsible to convert java calls into database specific calls and database specific
+calls into java calls.
+
+JDBC API:->
+-> JDBC API provides several classes and interfaces.
+-> Programmer can use these classes and interfaces to communicate with database.
+-> Driver Software vendor can use JDBC API while developing driver software.
+-> JDBC API contains 2 packages.
+
+i. java.sql package
+ii. javax.sql package
+
+java.sql package:->
+-> it contains basic classes and interfaces which can be used for database communication.
+Interfaces:-> Driver,Connection,Statement,PreparedStatement,CallableStatement,ResultSet
+Classes:-> DriverManager,Date,Time,TimeStamp,Types
+
+javax.sql package:->
+-> it contains more advanced classes and interfaces which can be used for database
+communication.
+-> it contains multiple sub packages
+javax.sql.rowset,javax.sql.rowset.serial,javax.sql.rowset,spi
+Interfaces:-> DataSource,RowSet,RowSetListener,ConnectionEventListener
+Classes:-> RowSetEvent,ConnectionEvent
+
+-> Programmer are not responsible to provide implementation for JDBC API interfaces.
+-> most of the times database vendor is responsible to provide implementation as the part of
+driver software.
+-> every driver software is a collection of classes implementing various interfaces of JDBC API,
+which can be use to communicate with particular database
+-> Java Application <-> driver software <-> database
+-> for example driver software for oracle means collection of implementation classes of JDBC API,
+which can be used to communicate with oracle database.
+
+-> Every driver software is identified with a special class which is nothing but Driver Class.
+-> it is the implementation class of java.sql Driver Interface.
+-> eg1:-> type 1 driver software provided by SUN micro Systems as the part of JDK. The corresponding
+driver class name is Sun.Jdbc.Odbc.JdbcOdbcDriver
+-> eg2:-> thin driver provided by oracle corporation & corresponding driver class name is
+Oracle.jdbc.OracleDriver
+
+Difference b/w Driver interface,Driver class & Driver Software:->
+
+Driver Interface:->
+-> This interface present in java.sql package.
+-> it acts as a requirement specification to develop Driver class.
+
+Driver Class:->
+-> it is the implementation class of Driver interface.
+-> it is the main class present in Driver Software.
+Eg: sun.jdbc.odbc.JdbcOdbcDriver,oracle.jdbc.OracleDriver
+
+Driver Software:->
+-> it is the collection of implementation classes of various interfaces present JDBC API.
+-> it is responsible to convert java class into database specific calls and database specific
+calls into java calls.
+-> it acts as bridge between java application & database.
+
+
+-> Usually Driver Softwares are available in the form of jar file. Eg ojdbc6.jar,ojdbc7.jar etc.
+-> Driver software can be provided by the following vendors
+i. Java Vendor
+ii. Database Vendor
+iii. Third Party Vendor
+
+Eg:
+-> type-1 driver(jdbc-odbc bridge driver) provided by java vendor
+-> Thin Driver provided by Oracle database Vendor
+-> Inet is a 3rd party vendor providing driver software's for various databases.
+Inet oraxo for oracle databases
+Inet merlia for microsoft sql server
+Inet sybelux for sybase database
+
+Note:-> it is highly recommended to use database vendor provided driver softwares.
+
+
+-> while developing driver software, vendors may use only java or java with other languages like
+c/c++.
+-> if driver software is developed only in java language,then such type of drivers are called
+pure java drivers.
+-> if driver software is developed with java and other languages then such type of driver software
+called partial java driver.
+=================================================================================================
+Types Of Drivers:->
+-> while communicating with database, we have to convert java calls into database specific calls and
+database specific calls into java calls. for this Driver software is required.
+-> In the market thousands of Drivers are available but based on functionality and architecture all
+drivers are divided into 4 types
+i. Type-1 Driver(JDBC-ODBC Bridge Driver or Bridge driver)
+ii. Type-2 Driver(Native API-Partly Java Driver or Native driver)
+iii. Type-3 Driver(All Java net protocol driver or network protocol or middleware driver.
+iv. Type-4 Driver(All jaa native protool driver or pure java driver or thin driver)
+
+-> Progress Data Direct Software company introduced type-5 driver. it is not industry standards.
+
+
+Type-1 Driver:->
+-> Java Application <-> Type-1 Driver <-> ODBC Driver <-> DB
+-> Also known as JDBC-ODBC Bridge Driver or Bridge Driver.
+-> This driver provided by sun micro systems as the part of JDK.
+-> Internally, this driver will take support of ODBC driver to communicate with database.
+-> Type-1 driver converts JDBC calls into ODBC calls and ODBC driver converts ODBC calls into database
+specific calls.
+-> hence Type-1 Driver acts as bridge between JDBC & ODBC.
+
+Advantages:->
+-> it is very easy to use and maintain
+-> we are not required to install because it is available as the part of JDK.
+-> Type-1 driver won't communicate with database directly.hence it is database independent driver
+because of this migrating from one database to another database will become easy.
+
+Limitations:->
+-> it is slowest driver among all drivers because first it will convert JDBC calls into ODBC calls and
+ODBC driver converts ODBC calls into database specific calls.
+-> This driver internally depends on ODBC driver which will work only on windows machines hence Type-1
+driver is platform dependent driver.
+-> No Support from JDK 1.8 version onwards.
+
+Note:-> Because of above limitations it is not recommended to use Type-1 driver. it was history.
+
+Type-2 Driver:->
+-> Java Application <-> Type-2 Driver <-> Database vendor specific native libraries <-> DB
+-> it is also known as native API partly java driver.
+-> Type-2 driver is exactly same as Type-1 driver except that ODBC driver is replaced with database
+vendor specific native libraries.
+-> Native libraries means the set of functions written in non-Java(mostly c/c++)
+-> we have to install vendor provided native libraries on the client machine.
+-> Type 2 driver converts JDBC calls into vendor specific native library calls which can be understandable
+directly database engine.
+
+Advantage:->
+-> when compared with Type-1 driver performance is high, because it required only one level conversion
+from JDBC to native library calls.
+-> no need of arranging ODBC driver.
+-> when compared with Type-1 driver, portability is more because Type-1 driver is applicable only
+for windows machines.
+
+Limitations:->
+-> it is database dependent driver because it internally uses database specific native libraries hence
+migrating from one database to another database will become difficult.
+-> it is platform dependent driver.
+-> we required to install native libraries on the client machine.
+-> There is no guarantee every database vendor will provide these drivers[oracle people provided but
+mysql people won't].
+Note:-> The only driver which is both platform & database dependent is Type-w driver. it is not recommended
+to use.
+
+Type-2 With OCI:->
+-> Java Application(JDBC) <-> OCI Driver <-> OCI Libraries <-> DB
+-> OCI(Oracle Call Interface) Driver is Type-2 driver provided by Oracle.
+-> OCI driver internally uses OCI Libraries to communicate with database.
+-> OCI Libraries contain c language functions.
+-> OCI driver and corresponding OCI Libraries are available in the following jar file hence we have
+to plcae this jar file in the classpath.
+ojdbc14.jar -> Oracle 10g(internally users java 1.4v)
+ojdbc6.jar -> Oracle 11g(internally uses java 6v)
+ojdbc7.jar -> Oracle 12c(internally uses 7v).
+
+
+Type-3 Driver:->
+-> Java Application <-> Type-3 Driver <-> middleware server <-> DB
+-> Also known as all java net protocol driver or network protocol driver or middleware driver.
+-> Type-3 Driver converts JDBC calls into middleware server specific calls middleware server converts
+middleware server specific calls into database specific calls.
+-> Internally middleware server uses Type-1,2 or 4 drivers to communicate with database.
+
+Note:-> The only driver which is both platform independent and database independent is Type 3 Driver.
+hence it is recommended to use.
+
+Advantages:->
+-> This Driver won't communicate with database directly and hence it is database independent driver.
+-> it is platform independent driver.
+-> no need of ODBC driver or vendor specific native libraries.
+
+Limitations:->
+-> Because of having middleware server in the middle there may be a chance of performance problems.
+-> we need to purchase middleware server and hence the cost of this driver is high when compared with
+all remaining drivers.
+
+
+Type-4 Driver:->
+-> Java Application <-> Type-4 Driver <-> DB
+-> Also known as pure java driver (or) all java native protocol driver or thin driver.
+-> This driver uses database specific native protocols to communicate with database.
+-> This driver converts JDBC calls into database specific calls directly.
+-> This driver developed only in java and hence it is also known as pure java driver because of
+this it is platform independent driver.
+-> this driver won't require any ODBC driver or native libraries at client side and hence it is called
+thin driver.
+
+Advantages:->
+-> it is platform independent driver.
+-> it won't require ODBC driver or native libraries or middleware server.
+-> it uses database vendor specific native protocol to communicate with database and hence security
+is more
+
+Limitations:->
+-> The only limitation of this driver is it is database dependent driver because it is communicate
+with database directly.
+-> Eg thin driver for oracle and connector j for mysql.
+
+Which Driver Should be used??
+-> If we are using only one type of database in our application then it is recommended to use type-4
+driver.eg standalone applications & small scale web applications.
+-> If we are using multiple types of databases in our application then type-3 driver is recommended to use.
+eg:large scale web applications,enterprise applications.
+-> if type-3 and type-4 driver are not available then only we should go for type-2 driver.
+-> if no other driver is available then we should go for Type-1 driver.
+
+
+Thin Driver VS Thick Driver:->
+-> if database driver required some extra component to communicate with the database such type of
+driver is called thick driver. for example type-1,type-2,type-3.
+-> if database driver won't required any extra component to communicate with the database then such
+type of driver is called thin driver. for example type-4.
+
+2-Tier Architecture :-> Type-2,Type-1,Type-4(2 machines)
+3-Tier Architecture :-> Type-3(3 machines)
+=================================================================================================
+Standard steps for developing JDBC application:->
+i.Load and Register Driver class
+ii. Establish connection b/w java application and database.
+iii. create statement object.
+iv. send and execute sql query.
+v. process result from result set.
+vi. close the connection
+
+Load and Register Driver Class:->
+-> From java application if we want to communicate with database,some special software
+is required, which is nothing but Driver Software we have to make driver software available
+to our program.
+-> every driver software is available in the for of jar file and hence we have to place this jar file in classpath.
+-> Note:-> Type-1 driver software is available as the part of JDK and hence we are not required to set any classpath
+explicitly.
+-> every driver software is identified with some special class which is nothing but Driver Class.
+-> For Type-1 Driver class name is sun.jdbc.odbc.JdbcOdbcDriver
+-> we have to load this driver class.
+-> Any java class we can load by using Class.forName() method hence we can load Driver Class also by using this method
+Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+
+class JdbcOdbcDriver {
+	static {
+		JdbcOdbcDriver driver = new JdbcOdbcDriver();
+		DriverManager.registerDriver(driver);
+	}
+}
+
+Establish connection between java application and database:->
+Connection con = DriverManager.getConnection("jdbc:ojdbc:demodsn","scott","tiger");
+con is name is sun.jdbc.odbc.JdbcOdbcConnection class object and this implementation is provided by driver software vendor.
+
+
+Create Statement Object:->
+Statement st = con.createStatement();
+
+DDL(Data Definition Language) Commands eg: create table,alter table,drop table etc.
+DML(Data Manipulation Language) commands eg: insert,delete,update
+DQL(Data Query Language) Commands eg:select
+DCL(Data Control Language) Commands eg: alter password, grant access etc.
+Data Administration Commands eg: start audit,stop audit
+Transaction Control Commands: eg: commit,rollback,Savepoint etc.
+
+Java Developer Point of View:->
+-> Select Commands vs non-select commands(most of the time DML commands)
+
+
+Prepare, Send & Execute Sql Query:->
+
+execute Query:->
+-> to execute select queries
+select * from movies
+public ResultSet executeQuery(String sqlQuery) throws SQLException
+eg: ResultSet rs = st.executeQuery("select * from movies");
+
+executeUpdate():->
+-> it is applicable only for non select operations.
+-> DML (insert/delete/update)
+-> delete from movies where mon >10
+-> 3 rows deleted
+public int executeUpdate(String sqlQuery) throws SQLException
+eg: int x = st.executeUpdate("delete from employees where mno=1");
+
+execute():->
+-> it is applicable for both select & non-select queries.
+-> if we don't know the type of query at the beginning.
+-> return type of execute method is boolean.
+true -> select queries
+false -> non-select queries
+public boolean execute(String sqlQuery) throws SQLException
+
+st.getResultSet()
+st.getUpdateCount();
+
+Note:-> what happen if we used non select query with executeQuery. if we mismatch this type of activities then result
+will be varies from driver to driver.
+type-1 :-> SQLException
+type-2 :-> Empty resultset
+
+for example executeUpdate() vs select query is same problem then what will happen.this result is also varied from driver
+to driver
+type-1 :-> SQL Exception
+type-4 :-> rows selected number we will get
+
+int rowCount = st.executeUpdate("create table emp(eno number)");
+type-1 = -1
+type-4 = 0
+
+Process Result From ResultSet:->
+ResultSet rs = st.executeQuery("select * from movies");
+public boolean next();
+while(rs.next()){
+ read data from that record
+ }
+
+ rs.getXXX() => rs.getInt(),rs.getString(),rs.getDouble() ...
+ rs.getXXX(String columnName)
+ rs.getXXX(int columnIndex)
+
+ int index = rs.findColumn(String columnName);
+
+ Conclusions:
+ -> ResultSet follows Iterator Design Pattern
+ -> ResultSet object is always associated with statement object.
+ -> Per Statement only one ResultSet is possible at a time. if we are trying to open another
+ result set then automatically first ResultSet will be closed.
+
+
+ Close the Connection:->
+ -> order of close is
+ rs.close();
+ st.close();
+ con.close();
+ -> per statement only one resultset is possible but per connection multiple statement are possible.
+ -> ResultSet is associated with statement object.
+ -> per statement only one ResultSet is possible.
+ -> statement is associated with connection.
+ -> per Connection multiple Statement object are possible.
+
+ Note:-> when we close connection then resultset and statement object are automatically closed.
+ con.close();
+
+ -> the best way to close resource is try with resources rather than finally block
+ try(Connection con = DriverManager.getConnection(){
+ }
+===============================================================================================================
+Aggregate Functions:->
+i. To know the number of rows
+count(*)
+select count(*) from anonymous
+ii. To know maximum value of esal
+max(esal)
+iii. To know minimum salary
+min(esal)
+================================================================================================================
+Execute select and non select queries with execute method:->
+Statement st = con.createStatement();
+boolean b = st.execute(sqlQuery);
+if(b==true){
+ResultSet rs = st.getResultSet();
+while(rs.next()){
+}
+}
+else {
+int updateCount = st.getUpdateCount();
+sysout("the no of row effected="+updateCount);
+}
+
+executeQuery with non-select :-> result will vary from the driver to driver. in case of type-1 driver
+sql exception will be thrown.but in the case of type-4 driver we will get empty resultset. we never going
+to get any exception.changes in db takes place.if we are trying to get empty resultset immediately we will get
+exception.
+
+executeUpdate with select :-> result will vary from the driver to driver. in case of type-1 driver sql exception
+will be thrown. bu in the case of type-4 driver nothing will happen but we will get no of row effected count.
+
+executeUpdate vs DDL :-> No error valid statement
+type-1 : -1
+type-4 : 0
+====================================================================================================================
+JDBC Real Time Standard:
+-> meaningful names we have to take
+-> package statement
+-> import explicit
+-> try catch is recommended than throws
+-> duplicate code is not recommended
+===================================================================================================================
+Life Cycle Of SQL Query Execution:-> from java application if we submit sql query by using statement object
+execute method.
+Statement st = con.createStatement();
+ResultSet rs = st.executeQuery(sqlQuery)
+then database engine will perform the following sequence of activities
+1.Compilation
+2.Execution
+3.Fetch Result
+
+Compilation:-> As the part of the compilation,database engine will perform the following activities.
+Query Tokenization:-> In this step total SQL Query will be divided into number of tokens and generate a Stream
+of tokens as output.
+Query Parsing:-> In this step,database engine will create parse tree(query tree) with stream of tokens.If the
+query tree is proper then there are no syntactical mistakes in that query.
+if the query tree construction fails then it indicates that there are some syntactical errors present in SQL
+Query and Sql Exception will raise.
+Query Optimization:-> The main purpose of query optimization is to improve performance.In this step optimized
+query tree is will be constructed.
+
+
+Execution Of SQL Query:-> once compilation success then database engine will take that query tree as input and
+execute that query by using interpreter.
+
+Fetch The Result:-> Database engine will provide result of SQL Query either in the form of resultset (for select
+query) or the the form of row count (for non select query) to the java application.
+
+
+Need of PreparedStatement:-> In the case of normal statement,whenever we are executing SQL Query,everytime
+compilation and execution will be happened at database side.
+Statement st = con.CreateStatement();
+ResultSet rs = st.executeQuery("select * from employees")
+sometimes in our application,we required to execute same query multiple times with same or different input
+values.
+java application <-> request time,response time <-> database <-> compile time,execution time
+
+Example 1:-> In IRCTC application, it is common requirement to list out all possible trains between two places
+select * from trains where source = 'xxx' and destination = 'yyy'
+
+Example 2:-> In book my show application,it is very common requirement to display theatre names where a
+particular movie running/playing in particular city
+select * from theatre where city='xxx' and movie ='yyy'
+in this case this query is required to execute lakhs of times per day.may be with different names and cities.
+for the above requirement if we use statement object then the query is required to compile and execute
+everytime. which creates performance problem.
+to overcome this problem we should go for prepared statement.
+the main advantage of prepared statement is the query will be compiled only once even though we are executing
+multiple times so that overall performance of the application will be improved.
+we can create PreparedStatement by using PreparedStatement() method of Connection interface.
+public PreparedStatement prepareStatement(String sqlQuery);
+At this line,sql query will send to the database. Database engine will compile that query and stores in the
+database.
+that are compiled query will return to the java application in the form of PreparedStatement object hence
+PreparedStatement represents "pre compiled sql query".
+whenever we call execute methods,database engine won't compile query once again and it will directly execute
+that query,so that overall performance will be improved.
+
+prepared statement parent interface is statement so all the method of statement are available in prepared
+statement.
+
+
+
+
+Steps to develop JDBC Application by using PreparedStatement
+i. Prepare SQL Query either with parameter or without parameter.
+insert into employees values(100,'durga',1000,'hyd')
+insert into employees values(?,?,?,?)
+?-> positional parameters or place holder or in parameter
+
+ii. Create PreparedStatement object with our qquery
+PreparedStatement pst = con.prepareStatement("sqlQuery")
+at this line only query will be compiled
+
+iii. if the query is parameterized query then we have to set up input values to these parameter by using
+corresponding setter methods.
+we have to consider these positional parameters from left to right and these are 1 index based. i.e index of
+first positional parameter is 1 but not zero.
+pst.setInt(1,100)
+pst.setString(2,'durga')
+pst.setDouble(3,1000)
+pst.setString(4,'hyd')
+
+Note:-> before executing the query,for every positional parameters we have to provide input values otherwise
+we will get SQLException
+
+iv. Execute SQL Query: -> PreparedStatement is the child interface of Statement and hence all methods of statement
+interface are by default available to the PreparedStatement. hence we can use same methods to execute sql query.
+executeQuery()
+executeUpdate()
+execute()
+
+Note:-> we can execute same parameterized query multiple times with different sets of input values.
+in this case query will be compiled only once and we can execute multiple times.
+
+Static Query vs Dynamic Query:-> The sql query without positional parameter(?) is called static query.Eg:
+delete from anonymous where id=3
+the sql query with positional parameter(?) is called dynamic query.Eg
+select * from anonymous where id=?
+
+Advantage Of PreparedStatement:->
+-> performance will be improved when compared with simple statement because query will be compiled only once.
+-> network traffic will be reduced between java application and database because we are not require to send
+query every time to the database.
+-> we are not required to provide input values at the beginning and we can provide dynamically so that we
+can execute same query multiple times with different sets of values.
+-> it allows to provide input values in java style and we are not required to convert into database specific
+format.
+-> best suitable to insert date values.
+-> best suitable to insert large objects(CLOB and BLOB).
+-> it prevents sql injection attack.
+
+Limitation Of PreparedStatement:->
+-> we can use PreparedStatement for only one sql query like CDMA phone but we can use simple statement to
+work with any no of queries like GSM phone
+Eg
+Statement st = con.createStatement()
+st.executeUpdate("insert into ..")
+st.executeUpdate("update anonymous...")
+st.executeUpdate("delete from ...");
+
+Here we are using one statement object to execute 3 queries.
+PreparedStatement pst = con.prepareStatement("insert into anonymous");
+here PreparedStatement object is associated with only insert query.
+
+Note:-> simple statement can be only used for static queries while prepared statement can used for both
+static and dynamic query.
+
+
+Statement Vs PreparedStatement:->
+-> at the time of creating statement object,we are not required to provide any query.
+Statement st = con.createStatement();
+hence statement object is not associated with any query and we can use for multiple queries.
+VS
+at the time of creating prepared statement we have to provide sql query compulsory and will send to the database
+and will be compiled.
+PreparedStatement pst = con.preareStatement(query)
+hence prepared Statement is associated wih only one query.
+
+-> whenever we are using execute method,every time query will be compiled and executed
+VS
+whenever we are using execute method query won't be compiled just will be executed.
+
+-> statement object can work only for static queries.
+VS
+prepared statement object can work for both static and dynamic queries.
+
+-> relatively performance is low VS relatively performance is high
+-> best choice if we want to work with multiple queries VS best choice if we want to work with ony one
+query but required to execute multiple times.
+-> there may be a chance of sql injection attack VS there is no chance of sql injection attack.
+-> inserting date and large object(clob and blob) is difficult VS inserting date and large objects(clob and blob)
+is easy.
+
+
+
+SQL Injection Attack:-> when we append special character as dynamic input values while executing sql queries at the run
+time the behaviour of the query will be changed. this is because of the simple statement is compiled every time while
+executing the query then query will be accordingly interpret according to that. this case is not happen with prepare statement
+because prepared statement compiled only once at compile time so there is no change in query behaviour.
+=====================================================================================================================
