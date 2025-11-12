@@ -986,3 +986,35 @@ Dis-advantage:->
 -> it is applicable only for non select query
 -> within the batch if any one query execution failed then all other query execution will also failed.
 ===================================================================================================================
+
+Handling Date Values For Database Operations:->
+-> sometimes as the part of programming requirement,we have to insert and retrieve data like
+DOB,DOJ,DOM,DOP... wrt database.
+-> it is not recommended to maintain date values in the form of String because comparisons
+will become difficult.
+-> In java we have two data classes
+i. java.util.Date
+ii. java.sql.Date
+
+-> java.sql.Date is the child class of java.util.Date.
+-> java.sql.Date is specially designed class for handling date values wrt database.
+-> other than database operations, if we want to represent date in our java program then
+we should go for java.util.Date.
+
+Differences between java.util.Date and java.sql.Date
+-> it is general Utility Class to handle Dates in our java program VS it is specially designed
+class to handle dates w.r.t DB Operations.
+-> it represents both date and time VS it represents only date but not time
+
+Oracle Date Creation Types:->
+insert into info values('mahesh','15-JAN-2004');
+insert into info values('nabin',TO_DATE('04/15/2004','MM/DD/YYYY'));
+insert into info values('nabin',TO_DATE('04/15/2004 09:30','MM/DD/YYYY HH:MI'));
+insert into info values('nabin',TO_DATE('04/15/2004 09:30','MM/DD/YYYY HH24:MI'));
+insert into info values('wow',TO_DATE('04-15-2004 09:30','MM-DD-YYYY HH24:MI'));
+
+Note:-> if end user provided value is in yyyy-mm-dd then we can directly convert string object to
+sql date object
+java.sql.Date sDate = new java.sql.Date().valueOf("yyyy-mm-dd");
+otherwise we need to convert string to util date and then sql date.
+ ================================================================================================================
