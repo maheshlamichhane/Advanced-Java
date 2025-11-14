@@ -1103,3 +1103,38 @@ Need of Buffer Concept in I/O Operations:->
   description clob
   );
 ====================================================================================================================
+
+Connection Pooling:->
+-> If we required to communicate with database multiple times then it is not recommended to
+create separate Connection object every time because creating and destroying connection object
+every time creates performance problems.
+-> To overcome this problem,we should go for Connection Pool.
+-> Connection Pool is a pool of already created Connection objects which are ready to use.
+-> If we want to communicate with database then we request connection pool to provide
+connection. once we got the connection, by using that we can communicates with database.
+after completing our work, we can return connection to the pool instead of destroying.
+-> Hence the main advantage of connection pool is we can reuse same connection object multiple
+times,so that overall performance of application will be improved.
+
+
+Process to implement Connection Pooling:->
+i. Creation of DataSource object
+-> DataSource is responsible to manage connections in Connection Pool.
+-> DataSource is an interface present in javax.sql.package
+-> Driver Software vendor is responsible to provide implementation.
+-> Oracle people provided implementation class name is OracleConnectionPoolDataSource
+-> This class presents inside oracle.jdbc.pool package and it is the part of ojdbc6.jar.
+OracleConnectionPoolDataSource ds = new OracleConnectionPoolDataSource();
+
+ii. Set required JDBC Properties to the Database object
+-> ds. setURL("jdbc:oracle:thin:@localhost:1521:orcl");
+-> ds.setUser("sys as sysdba");
+-> ds.setPassword("software");
+
+iii. Get Connection from DataSource object:
+Connection con = ds.getConnection();
+-> Once we got Connection object then remaining process is as usual.
+
+Note:This approach is only applicable for standalone application for web application we can also
+implement it by using server level connection pooling.
+====================================================================================================================
