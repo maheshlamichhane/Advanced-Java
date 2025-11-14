@@ -1455,4 +1455,301 @@ WHERE ename='Durga' AND version = 1;
 -> If a conflict occurs, application may retry the transaction.
 
 Use case: Web applications where many users read data but conflicts are rare (e.g., inventory updates).
-===================================================================================================
+============================================================================================================
+
+Metadata:->
+-> Metadata means data about data. i.e Metadata provides extra information about our original
+data.
+-> Eg: Metadata about database is nothing but database product name,database version etc.
+-> Metadata about ResultSet means no of columns,each column name,column type etc..
+-> JDBC provides support for 3 Types of Metadata
+
+i. DatabaseMetaData
+ii. ResultSetMetadata
+iii. ParameterMetaData
+
+DatabaseMetaData:->
+-> It is an interface present in java.sql package.
+-> Driver Software vendor is responsible to provide implementation.
+-> We can use DatabaseMetaData to get information about our database like database product
+name,driver name,version,number of tables etc.
+-> We can also use DatabaseMetaData to check whether a particular feature is supported by
+DB or not like store procedures,full joins etc.
+-> we can get DatabaseMetaData object by using getMetaData() method of Connection interface.
+DatabaseMetaData dbmd = con.getMetaData();
+-> once we got DatabaseMetaData object we can call several methods on that object like
+getDatabaseProductName();
+getDatabaseProductVersion();
+getMaxColumnsInTable();
+supportsStoredProcedures();
+etc.
+
+
+ResultSetMetaData:->
+-> It is an interface present in java.sql package.
+-> Driver Software vendor is responsible to provide implementation.
+-> it provides information about database table represented by ResultSet object.
+-> Useful to get number of columns,column types etc.
+-> We can get ResultSetMetaData object by using getMetaData() method of ResultSet interface.
+public ResultSetMetaData getMetaData();
+Eg: ResultSetMetaData rsmd = rs.getMetaData();
+-> Once we got ResultSetMetaData object we can call the following methods on that object like
+getColumnCount();
+getColumnName();
+getColumnType();
+etc..
+
+ParameterMetaData(I):
+-> it is an interface and present in java.sql package.
+-> Driver Software vendor is responsible to provide implementation.
+-> In General we can use positional parameters(?) while creating PreparedStatement object.
+-> PreparedStatement pst = con.prepareStatement("insert into employees values(?,?,?,?)");
+-> We can use ParameterMetaData to get information about positional parameters like parameter
+count,parameter mode and parameter type etc.
+-> we can get ParameterMetaData object by using getParameterMetaData() method of PreparedStatement
+interface.
+ParameterMetaData pmd = pst.getParameterMetaData();
+-> Once we got ParameterMetaData object, we can call several methods on that object like
+int getParameterCount()
+int getParameterMode(int param);
+int getParameterType(int param);
+String getParameterTypeName(int param);
+
+Important Methods of ParameterMetaData:->
+i. int getParameterCount():-> Retrieves the number of parameter in the PreparedStatement object
+for which this ParameterMetaData object contains information.
+
+ii. int getParameterMode(int param):-> Retrieves the designated parameter mode.
+iii. int getParameterType(int param):-> Retrieves the designated parameter's sql type.
+iv. String getParameterTypeName(int param):-> Retrieves the designated parameters database
+specific type name.
+v. int getPrecision(int param):-> Retrieves the designated parameters specified column size.
+vi. int getScale(int param):-> Retrieves the designated parameters number of digits to right of the
+decimal point.
+vii.int isNullable(int param):-> Retrieves whether null values are allowed in the designated
+parameter
+viii. boolean isSigned(int param):-> Retrieves whether values for the designated parameter can be
+signed numbers.
+==============================================================================================================
+
+ResultSet Types:->
+Division-1:-> Based on operations performed on ResultSet,we can divide ResultSet into 2 types
+i. Read Only ResultSets(Static ResultSets)
+ii. Updatable ResultSets(Dynamic ResultSets)
+
+Read Only ResultSets:->
+-> we can perform only read operations on the ResultSet by using corresponding getter methods
+and we cannot perform any updates.
+-> By default ResultSet is Read Only.
+-> We can specify explicitly ResultSet as Read only by using the following constant of ResultSet.
+public static final int CONCUR_READ_ONLY -> 1007
+
+Updatable ResultSets:->
+-> The ResultSet which allows programmer to perform updations, such type of ResultSets are
+called Updatable ResultSets.
+-> In this case we can perform select,insert,delete and update operations.
+-> We can specify ResultSet explicitly as Updatable by using the following constant of
+ResultSet.
+public static final int CONCUR_UPDATABLE -> 1008
+
+Division-2:
+-> Based on Cursor movement, ResultsSets will be divided into the following 2 types.
+i. Forward only(Non-Scrollable) ResultSet
+ii. Scrollable ResultSets
+
+Forward Only ResultSets:->
+-> it allows the programmer to iterate records only on forward direction i.e from top to
+bottom sequentially.
+-> by default every ResultSet is forward only.
+-> we can specify explicitly ResultSet as Forward only by using the following constant of
+ResultSet
+public static final int TYPE_FORWARD_ONLY -> 1003
+
+Scrollable ResultSets:->
+-> it allows the programmers to iterate in both forward and backward directions.
+-> we can also jump to a particular position randomly, or relative to current position. here
+we can move to anywhere.
+-> there are two types of scrollable resultsets.
+i. Scroll Insensitive ResultSet
+ii. Scroll Sensitive ResultSet
+
+Scroll Insensitive ResultSet:->
+-> After getting ResultSet if we are performing any change in database and if those changes
+are not reflecting to the ResultSet, such type of ResultSets are called scroll insensitive
+ResultSets.
+-> i.e ResultSet is insensitive to database operations.
+-> we can specify explicitly ResultSet as Scroll insensitive by using the following constant.
+public static final int TYPE_SCROLL_INSENSITIVE -> 1004
+
+Scroll Sensitive ResultSet:->
+-> After getting the ResultSet if we perform any change in the database and if those changes are
+visible to ResultSet, such type of ResultSet is called Scroll sensitive ResultSet.
+-> i.e ResultSet is sensitive to database operations.
+-> we can specify explicitly ResultSet as scroll sensitive by using the following constant.
+public static final int TYPE_SCROLL_SENSITIVE -> 1005
+
+
+Difference Between Scroll Insensitive and Scroll Sensitive ResultSets:->
+-> After getting ResultSet if we perform any updation in the DB then those updation are not
+visible to the ResultSet i.e ResultSet is insensitive to DB updations VS After getting
+ResultSet if we perform any updation in the DB then those updation are by default available
+to the ResultSet i.e ResultSet is sensitive to DB updations.
+-> As insensitive ResultSet is like snapshot of Data in DB when Query will be executed VS
+A Sensitive ResultSet doesn't represent snap shot of Data. it contains Pointers to Rows of
+DB directly, which satisfy Query condition.
+-> Relatively Performance is High VS Relatively Performance is low because for get operation
+a Trip is required to DB.
+
+Forward Only(Non-Scrollabel) ResultSet VS ScrollabelResultSet:->
+-> cursor can move only in forward direction VS cursor can move in both forward and backward
+direction.
+-> this cursor can't move randomly VS This cursor can move randomly.
+-> By using Non-scrollable ResultSet cursor,if we want to move to nth record (n+1) iterations
+are required hence performance is low VS performance is high, because cursor can move randomly to
+any record
+
+List of allowed methods on scrollable ResultSets:->
+1. rs.next();
+2. rs.getXxx();
+3. rs.getRow();
+4. rs.previous():-> it checks whether previous record is available or not. if it is available
+then the cursor will move to that record position.
+5. rs.beforeFirst():-> the cursor will be moved to before first record position
+6. rs.afterLast():-> moves the cursor after last record position.
+7. rs.first():-> moves the cursor to the first record position.
+8. rs.last():-> moves the cursor to the last record position
+9. rs.absolute(int x):-> The argument can be either positive or negative. if it is positive
+then the cursor will be moved to that record position from top of ResultSet. If the
+argument is negative then it will be moved to the specified record position from last.
+10. rs.relative(int x):-> The argument can be either positive or negative. if the argument
+is positive then the cursor will move to forward direction to specified number of records
+from the current position. if the argument is negative then the cursor will move to
+backward direction to the specified number of records from the current position.
+11. rs.isFirst():-> returns true if the cursor is locating at first record position
+12. rs.isLast():->
+13. rs.isBeforeFirst();
+14. rs.isAfterLast();
+15. rs.refreshRow(): -> we can use this method in scroll sensitive ResultSets to update row
+with latest values from database.
+
+Absolute Vs Relative Method:-> absolute() method will always work either from BFR or from
+ALR.relative() method will work wrt to current position.
+
+
+Note:This scrollable  is only supported by type-1 driver and type-2 with update but not by type-4.
+==================================================================================================================
+RowSets:->
+-> it is alternative to ResultSet.
+-> we can use RowSet to handle a group of records in more effective way than ResultSet.
+-> RowSet interface present in javax.sql package.
+-> RowSets is child interface of ResultSet.
+-> RowSet implementations will be provided by java vendor and database vendor.
+-> by default RowSet is scrollable and updatable.
+-> By default RowSet is serializable and hence we can send RowSet object across the network.but
+ResultSet object is not serializable.
+-> ResultSet is connected i.e to use ResultSet compulsory database Connection must be required.
+-> RowSet is disconnected. i.e to use RowSet database connection is not required.
+
+
+Types of RowSets:->
+-> There are two types of Rowsets
+i. Connected RowSets
+ii. Disconnected RowSets
+
+Connected RowSets:->
+-> Connected RowSets are just like ResultSets.
+-> To access RowSet data compulsory connection should be available to database.
+-> we cannot serialize connected rowsets
+eg: JdbcRowSets
+
+Disconnected RowSets:->
+-> Without having connection to the database we can access RowSet data.
+-> We can serialize Disconnected RowSets.
+-> Eg: CachedRowSet,WebRowSet,FilteredRowSet,JoinRowSet
+
+Diagaram:->
+									ResultSet(I)
+									    |
+									RowSet(I)
+									    |
+								-----------------
+								|				|
+								JDBC RowSet    CachedRowSet
+								                    |
+								               WebRowSet(I)
+								                    |
+								               ----------------
+								               | 			   |
+								               JoinRowSet(I)     FilteredRowSet(I)
+
+
+How to create RowSet Object:-> we can create different types of rowset object as follows
+RowSetFactory rsf = RowSetProvider.newFactory();
+JdbcRowSet jrs = rsf.createJdbcRowSet();
+CachedRowSet crs = rsf.createCachedRowSet();
+WebRowSet wrs = rsf.createWebRowSet();
+JoinRowSet jnrs = rsf.createJoinRowSet();
+FilteredRowSet frs = rsf.createFilteredRowSet();
+
+
+CachedRowSet:->
+-> it is the child interface of RowSet.
+-> it is by default scrollable and updatable.
+-> it is disconnected RowSet. i.e we can use RowSet without having database connection.
+-> it is serializable
+-> the main advantage of CachedRowSet is we can send this RowSet object for multiple
+people across the network and all those people can access RowSet data without having DB
+connection.
+-> if we perform any update operation(like insert,delete and update) to the CachedRowSet
+to reflect those changes compulsory Connection should be established.
+-> once connection established then only those changes will be reflected in database.
+
+
+WebRowSet(I):->
+-> it is the child interface of CachedRowSet.
+-> it is by default scrollable and updatable.
+-> it is disconnected and serializable.
+-> WebRowSet can publish data to xml files,which are very useful for enterprise applications.
+FileWriter fw = new FileWriter("emp.xml");
+rs.writeXml(fw);
+-> we can read xml data into RowSet as follows
+
+
+JoinRowSet:->
+-> it is the child interface of WebRowSet.
+-> it is by default scrollable and updatable.
+-> it is disconnected and serializable.
+-> if we want ot join rows from different rowsets into a single rowset based on matched
+column(common column) then we should go for JoinRowSet.
+-> we can add RowSets to the JoinRowSet by using addRowSet() method.
+addRowSet(RowSet rs,int commonColumnIndex);
+
+
+Row Id Interface:->
+-> Present in java.sql.package.
+-> introduced in JDBC 4.0
+-> For every row Database engine will associate a unique id, which is nothing but RowId.
+-> Internally RowId represents logical address of the row.
+-> whenever we are inserting rows automatically database engine will generate RowId for
+each row and programmer is not responsible to provide.
+-> database engine will use RowId internally to Retrieve Data.
+-> The main advantage of RowId is Fast Retrieval of data.
+
+
+RowIdLifetime:->
+-> it is an enum present in java.sq. package
+-> RowIdLifetime represent the life time of generated RowIds
+-> The possible values for RowIdLifetime are
+
+i. ROWID_UNSUPPORTED:-> indicates that DB won't provide support for RowIds
+ii.ROWID_VALID_FOREVER:-> indicates that life time is forever and unlimited
+iii. ROWID_VALID_SESSION:-> indicates that rowid applicable only for current session.
+iv. ROWID_VALID_TRANSACTION:-> indicates that rowid is valid only for current session
+
+Note:-> For oracle database it is ROWID_VALID_FOREVER
+But for MySql database it is ROWID_UNSUPPORTED
+
+DatabaseMetaData dbms = con.getMetaData();
+System.out.println(dbms.getRowIdLifeTime());
+==============================================================================================================
+
