@@ -1018,3 +1018,88 @@ sql date object
 java.sql.Date sDate = new java.sql.Date().valueOf("yyyy-mm-dd");
 otherwise we need to convert string to util date and then sql date.
  ================================================================================================================
+ Working with Large Objects(BLOB and CLOB):-> Sometimes as the part of programming requirement,
+ we have to insert and retrieve large files like images,video files,audio files,resume etc
+ wrt database.
+ Eg:
+ -> upload image in matrinomial web sites
+ -> upload resume in job related web sites
+
+ -> to store and retrieve large information we should go for Large Objects(LOBs).
+ -> there are 2 types of large objects.
+ i. Binary Large Object(BLOB)
+ ii. Character Large Object(CLOB)
+
+ Binary Large Object(BLOB):->
+ -> A BLOB is a collection of binary data stored as a single entity in the database.
+ -> BLOB type objects can be images,video files,audio files etc...
+ -> BLOB datatype can store maximum of "4GB" binary data.
+
+ CLOB(Character Large Objects):->
+ -> A CLOB is a collection of Character data stored as a single entity in the database.
+ -> CLOB can be used to store large text documents(may plain text or xml documents)
+ -> CLOB Type can store maximum of 4GB data.
+ Eg:hydhistory.txt
+
+ Create Table In Oracle With Blob:->
+ create table person(
+  name varchar2(10),
+  profile_pic blob
+  );
+
+
+ Need of Buffer Concept in I/O Operations:->
+ -> Source File(10 KB) -> Destination File(10 KB)
+ -> Without buffering 10 * 1024 read & write Operations are required
+ -> Source File(10 KB) -> Buffer byte[](1 KB) -> destination file(10 kB)
+ -> Because of Buffer we have to perform only 10 read operations and 10 write operations
+
+
+  create table animal(
+   name varchar2(10),
+   description clob
+   );
+==================================================================================================================
+
+Working with Large Objects(BLOB and CLOB):-> Sometimes as the part of programming requirement,
+we have to insert and retrieve large files like images,video files,audio files,resume etc
+wrt database.
+Eg:
+-> upload image in matrimonial websites
+-> upload resume in job related websites
+
+-> to store and retrieve large information we should go for Large Objects(LOBs).
+-> there are 2 types of large objects.
+i. Binary Large Object(BLOB)
+ii. Character Large Object(CLOB)
+
+Binary Large Object(BLOB):->
+-> A BLOB is a collection of binary data stored as a single entity in the database.
+-> BLOB type objects can be images,video files,audio files etc...
+-> BLOB datatype can store maximum of "4GB" binary data.
+
+CLOB(Character Large Objects):->
+-> A CLOB is a collection of Character data stored as a single entity in the database.
+-> CLOB can be used to store large text documents(may plain text or xml documents)
+-> CLOB Type can store maximum of 4GB data.
+Eg:hydhistory.txt
+
+Create Table In Oracle With Blob:->
+create table person(
+ name varchar2(10),
+ profile_pic blob
+ );
+
+
+Need of Buffer Concept in I/O Operations:->
+-> Source File(10 KB) -> Destination File(10 KB)
+-> Without buffering 10 * 1024 read & write Operations are required
+-> Source File(10 KB) -> Buffer byte[](1 KB) -> destination file(10 kB)
+-> Because of Buffer we have to perform only 10 read operations and 10 write operations
+
+
+ create table animal(
+  name varchar2(10),
+  description clob
+  );
+====================================================================================================================

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 
 public class DateMain {
 
-    public static void main(String[] args) throws SQLException, ParseException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException, ParseException {
 
         // Inserting Date
         insertingDate();
@@ -19,7 +19,7 @@ public class DateMain {
         System.out.println("SqlDate="+sDate);
     }
 
-    public static void insertingDate() throws ParseException, ClassNotFoundException, SQLException {
+    public static void insertingDate() throws ParseException, SQLException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         java.util.Date utilDate = format.parse("20/04/1994");
 
@@ -33,7 +33,7 @@ public class DateMain {
         }
     }
 
-    public static void retrievingDate() throws SQLException, ClassNotFoundException {
+    public static void retrievingDate() throws SQLException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Connection con = DBUtil.getConnection();
         PreparedStatement pst = con.prepareStatement("select * from info");
