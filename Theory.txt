@@ -1161,7 +1161,7 @@ urls = jdbc:oracle:thin:sys as sysdba/software@localhost:1521:orcl
 
 Transaction Management In JDBC:->
 -> Process of combining all related operations into a single unit and executing on the rule
-"either all or none" is called transation management.
+"either all or none" is called transaction management.
 -> hence transaction is a single unit of work and it will work on the rule "either all or none"
 
 Case-1:Funds Transfer
@@ -1174,7 +1174,7 @@ completed and credit into receivers account fails then there may be a chance of 
 problems.
 
 Case-2: Movie Ticket Reservation
-1.Verifyy the status
+1.Verify the status
 2.Reserve the tickets
 3. Payment
 4.issue tickets.
@@ -1184,11 +1184,11 @@ some operations fails then there may be data inconsistency problems.
 
 
 Types of Transactions:
--> There are two types of transations
+-> There are two types of transactions
 i. Local Transactions
 ii. Global Transactions
 
-Local Transations:->
+Local Transactions:->
 -> All operations in a transaction are execute over same database
 -> Eg: Funds transfer from one account to another account where both accounts in the same bank
 
@@ -1215,6 +1215,7 @@ con.commit();
 iii. if any sql query fails then we have to rollback operations which are already completed by
 using rollback() method.
 con.rollback();
+
 
 Savepoint(I):->
 -> Introduced in JDBC 3.0 version.
@@ -1289,13 +1290,37 @@ T1: select * from employees where esal > 5000;
 
 -> In the above code whenever transaction-1 performing read operation second time, a new
 row will come in the result.
--> To overcome these problems we shourld go for Transaction isolation levels
+
+iv. Lost Updates
+-> Lost Update occurs when two or more transactions read the same data and then update it concurrently, but one
+transaction’s update overwrites the other, causing data loss.
+
+How to Prevent Lost Updates:
+-> Option 1: SELECT ... FOR UPDATE
+
+Locks the rows for your transaction:
+BEGIN;
+SELECT * FROM employees WHERE ename='Durga' FOR UPDATE;
+-- Now T1 locks the row
+UPDATE employees SET esal = esal + 1000 WHERE ename='Durga';
+COMMIT;
+T2 trying the same FOR UPDATE will wait until T1 commits.
+This prevents overwriting and lost updates.
+
+-> Option 2: Higher Isolation Levels
+REPEATABLE READ → prevents non-repeatable reads, but can still have phantom issues.
+SERIALIZABLE → ensures full serial execution; lost updates are automatically avoided.
+
+
+-> To overcome these problems we should go for Transaction isolation levels
 -> Connection interface defines the following 4 transaction isolation levels.
 i.TRANSACTION_NONE -> 0
 ii. TRANSACTION_READ_UNCOMMITTED -> 1
 iii. TRANSACTION_READ_COMMITTED -> 2
 iv. TRANSACTION_REPEATABLE_READ -> 4
 v. TRANSACTION_SERIALIZABLE -> 8
+
+
 
 
 Transaction Read Uncommitted:->
@@ -1315,7 +1340,7 @@ and Phantom Read Problem
 Transaction Repeatable Read:->
 -> This is the default value for most of the database. Internally the result of SQL Query
 will be locked for only one transaction. if we perform multiple read operations,then there is
-a gurantee that for same result.
+a guarantee that for same result.
 -> it prevents dirty read problem and non repeatable read problems. but still there may be
 a chance of phantom read problem.
 
@@ -1332,4 +1357,102 @@ setTransactionIsolation(int level);
 
 Oracle Supported Isolation Level-> 2,8 where 2 is default
 Mysql Supported Isolation Level -> 1,2,4,8
+
+Why PostgreSQL Uses Locks
+-> PostgreSQL is a multi-user database. When multiple transactions access the same data:
+-> Some can read concurrently without conflict
+-> Some can modify data, which may conflict with other reads/writes
+-> PostgreSQL uses locks to manage these situations and prevent lost updates, dirty reads, and other anomalies.
+
+Lock Types at a High Level
+-> PostgreSQL supports row-level locks and table-level locks. For simplicity, we focus on the shared vs exclusive
+concept.
+
+i. Shared Lock
+-> Multiple transactions can read the resource at the same time. Blocks writes.
+-> Other shared locks allowed. Conflicts with exclusive locks.
+
+ii. Exclusive Lock
+-> Only one transaction can modify the resource. Prevents other reads/writes that conflict.
+-> Blocks other shared/exclusive locks.
+
+Row-Level Locks in PostgreSQL?
+-> Row-level locks are applied to specific rows, usually through SELECT ... FOR UPDATE or SELECT ... FOR SHARE.
+
+i. FOR UPDATE (Exclusive Row Lock)
+-> SELECT * FROM table WHERE condition FOR UPDATE;
+-> Prevents other transactions from updating/deleting these rows until commit. Used to avoid lost updates.
+
+ii. FOR NO KEY UPDATE
+-> SELECT * FROM table WHERE condition FOR NO KEY UPDATE;
+-> Slightly weaker exclusive lock. Prevents updates that modify primary/foreign keys.
+
+iii. FOR SHARE (Shared Row Lock)
+-> SELECT * FROM table WHERE condition FOR SHARE;
+-> Allows multiple transactions to read and lock the same rows, but prevents updates/deletes on these rows.
+
+iv. FOR KEY SHARE
+-> SELECT ... FOR KEY SHARE
+-> Weaker shared lock, protects primary/foreign key references.
+
+
+Key Points:
+-> Row locks are released at the end of the transaction
+-> Shared locks allow concurrent reads, exclusive locks do not
+
+Example:
+
+Shared Lock Example:
+BEGIN;
+SELECT * FROM employees WHERE dept='IT' FOR SHARE;
+-- Transaction T1 locks these rows for reading
+-- Other transactions can also acquire FOR SHARE, but cannot UPDATE/DELETE these rows
+
+Exclusive Lock Example:
+BEGIN;
+SELECT * FROM employees WHERE dept='IT' FOR UPDATE;
+-- Transaction T1 locks these rows for update
+-- Other transactions trying FOR UPDATE or UPDATE/DELETE are blocked until T1 commits
+
+Pessimistic Locking
+-> Assume conflicts are likely, so lock the data before modifying it to prevent other transactions from making
+conflicting changes.
+-> Uses database locks (shared/exclusive) to prevent concurrent writes.
+
+Example:
+BEGIN;
+-- Lock the row for update
+SELECT * FROM employees WHERE ename='Durga' FOR UPDATE;
+
+-- Now safe to update
+UPDATE employees SET esal = esal + 1000 WHERE ename='Durga';
+
+COMMIT;
+
+-> Locks rows immediately, preventing other transactions from updating them.
+-> Prevents lost updates and ensures row-level consistency.
+-> Can reduce concurrency because other transactions may wait for the lock.
+
+Optimistic Locking:->
+-> Assume conflicts are rare, so allow multiple transactions to read and work on the data concurrently,
+but check for conflicts before committing.
+-> Does not lock rows immediately.
+-> Instead, it uses a version number or timestamp to detect conflicts at commit time.
+
+Example:
+-- Step 1: Read row
+SELECT esal, version FROM employees WHERE ename='Durga';
+-- Step 2: Do calculation in app
+-- Step 3: Update only if version hasn't changed
+UPDATE employees
+SET esal = 9000, version = version + 1
+WHERE ename='Durga' AND version = 1;
+
+-- If no rows updated → conflict occurred
+-> No row lock is taken upfront.
+-> Conflicts are detected at update/commit time.
+-> High concurrency, suitable when conflicts are rare.
+-> If a conflict occurs, application may retry the transaction.
+
+Use case: Web applications where many users read data but conflicts are rare (e.g., inventory updates).
 ===================================================================================================
